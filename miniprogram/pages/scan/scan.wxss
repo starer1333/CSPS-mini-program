@@ -1,0 +1,57 @@
+.scan-page {
+  padding: 40rpx;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+.header {
+  margin-bottom: 60rpx;
+}
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+.scan-area {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  text-align: center;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+.scan-btn {
+  background-color: #ff9f1c;
+  color: #fff;
+  width: 300rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  margin: 0 auto 30rpx;
+}
+.table-no {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #ff6b6b;
+  display: block;
+}
+.tip {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+.confirm-btn {
+  background-color: #ff9f1c;
+  color: #fff;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  width: 100%;
+  border: none;
+}
+.confirm-btn::after {
+  border: none;
+}

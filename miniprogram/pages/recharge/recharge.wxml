@@ -1,0 +1,26 @@
+<view class="recharge">
+  <view class="header">
+    <text class="title">选择充值金额</text>
+    <text class="subtitle">充值即送余额，更有机会得优惠券</text>
+  </view>
+
+  <view class="rules-grid">
+    <view wx:for="{{rules}}" wx:key="index" 
+          class="rule-card {{selectedRuleIndex === index ? 'active' : ''}}"
+          bindtap="selectRule" data-index="{{index}}">
+      <view class="rule-amount">
+        <text class="currency">¥</text>
+        <text class="amount">{{item.amount}}</text>
+      </view>
+      <view class="rule-gift">
+        <text>赠送 ¥{{item.gift}}</text>
+      </view>
+      <view wx:if="{{item.coupon}}" class="rule-coupon">
+        <text>🎁 {{item.coupon}}</text>
+      </view>
+    </view>
+  </view>
+
+  <button class="recharge-btn" bindtap="doRecharge" wx:if="{{selectedRuleIndex !== null}}">立即充值</button>
+  <button class="recharge-btn disabled" wx:else disabled>请选择充值金额</button>
+</view>

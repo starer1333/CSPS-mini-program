@@ -1,0 +1,68 @@
+<view class="order-detail" wx:if="{{order}}">
+  <view class="detail-header">
+    <text class="status {{order.status === '已付款' ? 'paid' : (order.status === '已完成' ? 'completed' : 'cancelled')}}">{{order.status}}</text>
+    <text class="order-id">订单号：{{order.id}}</text>
+  </view>
+  
+  <view class="info-card">
+    <view class="info-row">
+      <text class="label">下单时间</text>
+      <text class="value">{{order.createTime}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.mealType === 'dinein'}}">
+      <text class="label">用餐方式</text>
+      <text class="value">堂食 · {{order.tableNo}}号桌</text>
+    </view>
+    <view class="info-row" wx:if="{{order.mealType === 'takeout'}}">
+      <text class="label">用餐方式</text>
+      <text class="value">外卖配送 · {{order.address}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.mealType === 'delivery'}}">
+      <text class="label">用餐方式</text>
+      <text class="value">到店自取 · {{order.pickupTime}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.remark}}">
+      <text class="label">备注</text>
+      <text class="value">{{order.remark}}</text>
+    </view>
+  </view>
+  
+  <view class="items-card">
+    <text class="card-title">商品清单</text>
+    <view wx:for="{{order.items}}" wx:key="key" class="order-item">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="item-img"></image>
+      <view class="item-info">
+        <text class="item-name">{{item.dishName}}</text>
+        <text class="item-specs">{{item.specsDesc}}</text>
+        <view class="item-price-row">
+          <text class="item-quantity">x{{item.quantity}}</text>
+          <text class="item-price">¥{{item.totalPrice}}</text>
+          <text class="item-unit">(¥{{item.unitPrice}}/份)</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="total-card">
+    <view class="total-row">
+      <text>商品合计</text>
+      <text>¥{{(order.total - (order.deliveryFee || 0)).toFixed(2)}}</text>
+    </view>
+    <view class="total-row" wx:if="{{order.mealType === 'takeout'}}">
+      <text>配送费</text>
+      <text wx:if="{{order.deliveryFee > 0}}">¥{{order.deliveryFee}}</text>
+      <text wx:else class="free">免配送费</text>
+    </view>
+    <view class="total-row final">
+      <text>总计</text>
+      <text>¥{{order.total}}</text>
+    </view>
+  </view>
+  
+  <view class="payment-card">
+    <text class="label">支付方式：</text>
+    <text class="value">{{order.payment === 'wechat' ? '微信支付' : '支付宝'}}</text>
+  </view>
+  
+  <button class="reorder-btn" bindtap="reorder">再来一单</button>
+</view>

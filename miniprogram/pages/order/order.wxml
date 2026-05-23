@@ -1,0 +1,66 @@
+<view class="order-page">
+  <!-- 主要内容区：左侧分类 + 右侧内容 -->
+  <view class="main-content">
+    <!-- 左侧主分类 -->
+    <view class="category-side">
+      <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="category-scroll">
+        <view wx:for="{{mainCategories}}" wx:key="index"
+              class="category-item {{activeMainIndex===index?'active':''}}"
+              bindtap="selectMainCategory" data-index="{{index}}">
+          {{item}}
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 右侧内容区 -->
+    <view class="content-side">
+      <!-- 子分类栏（仅当主分类有子分类时显示） -->
+      <view wx:if="{{subCategories[mainCategories[activeMainIndex]]}}" class="sub-categories">
+        <scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="sub-scroll">
+          <view wx:for="{{subCategories[mainCategories[activeMainIndex]]}}" wx:key="index"
+                class="sub-item {{activeSubName === item ? 'active' : ''}}"
+                bindtap="selectSubCategory" data-name="{{item}}">
+            {{item}}
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 菜品列表 -->
+      <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="dish-scroll">
+        <view wx:for="{{currentDishes}}" wx:key="id" class="dish-card" data-id="{{item.id}}" bindtap="goToDetail">
+          <image src="{{item.imageUrl}}" mode="aspectFill" class="dish-img"></image>
+          <view class="dish-info">
+            <text class="dish-name">{{item.name}}</text>
+            <text class="dish-desc">{{item.description}}</text>
+            <view class="size-prices">
+              <view wx:for="{{item.sizes}}" wx:key="index" class="size-item">
+                <text class="size">{{item.size}}</text>
+                <text class="price">¥{{item.price}}</text>
+              </view>
+            </view>
+            <view class="member-price-tag" wx:if="{{item.memberPrice && item.memberPrice < item.basePrice}}">
+              <text class="member-label">会员价</text>
+              <view class="price-group">
+                <text class="member-price">¥{{item.memberPrice}}</text>
+                <text class="original-price">¥{{item.basePrice}}</text>
+              </view>
+            </view>
+          </view>
+          <button class="add-btn" bindtap="addToCart" data-id="{{item.id}}" data-stopPropagation>+</button>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 底部购物车栏（点击弹出浮层） -->
+  <view class="cart-bar" wx:if="{{cartCount > 0}}" bindtap="showCartPopup">
+    <view class="cart-info">
+      <text class="cart-count">共 {{cartCount}} 件商品</text>
+      <text class="cart-total">合计：¥{{cartTotal}}</text>
+    </view>
+    <button class="settle-btn" bindtap="goToCheckout" catchtap>去结算</button>
+  </view>
+
+  <!-- 购物车浮层组件 -->
+  <cart-popup id="cartPopup" bind:cartchange="loadCart" />
+</view>

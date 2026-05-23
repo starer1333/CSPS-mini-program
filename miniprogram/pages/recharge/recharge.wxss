@@ -1,0 +1,120 @@
+.recharge {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+  margin-bottom: 60rpx;
+}
+
+.rule-card {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 30rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2rpx solid #eee;
+  transition: all 0.2s;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
+}
+
+.rule-card.active {
+  border-color: #ff9f1c;
+  background-color: #fff8f0;
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 20rpx rgba(255,159,28,0.15);
+}
+
+.rule-amount {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 16rpx;
+}
+
+.currency {
+  font-size: 36rpx;
+  color: #ff3b30;
+  font-weight: bold;
+  margin-right: 4rpx;
+}
+
+.amount {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #ff3b30;
+  line-height: 1;
+}
+
+.rule-gift {
+  background-color: #f0f0f0;
+  padding: 6rpx 20rpx;
+  border-radius: 40rpx;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.rule-gift text {
+  color: #ff9f1c;
+  font-weight: 500;
+}
+
+.rule-coupon {
+  background-color: #fff0e6;
+  padding: 6rpx 16rpx;
+  border-radius: 40rpx;
+  font-size: 24rpx;
+  color: #ff9f1c;
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recharge-btn {
+  background-color: #ff9f1c;
+  color: #fff;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  width: 100%;
+  border: none;
+  box-shadow: 0 4rpx 16rpx rgba(255,159,28,0.3);
+  transition: opacity 0.2s;
+}
+
+.recharge-btn.disabled {
+  background-color: #ccc;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.recharge-btn::after {
+  border: none;
+}

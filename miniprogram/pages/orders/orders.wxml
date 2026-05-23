@@ -1,0 +1,43 @@
+<view class="orders">
+  <view class="order-list">
+    <view wx:for="{{orders}}" wx:key="id" class="order-card" bindtap="goToDetail" data-id="{{item.id}}">
+      <view class="order-header">
+        <text class="order-id">订单号：{{item.id}}</text>
+        <text class="order-status order-placed">已下单</text>
+      </view>
+      <view class="order-time">{{item.createTime}}</view>
+      
+      <!-- 商品明细列表 -->
+      <view class="order-items">
+        <view wx:for="{{item.items}}" wx:key="key" class="order-item">
+          <view class="item-info">
+            <text class="item-name">{{item.dishName}}</text>
+            <text wx:if="{{item.specsDesc}}" class="item-specs">{{item.specsDesc}}</text>
+          </view>
+          <view class="item-detail">
+            <text class="item-quantity">x{{item.quantity}}</text>
+            <text class="item-price">¥{{item.unitPrice}}</text>
+            <text class="item-total">¥{{item.totalPrice}}</text>
+          </view>
+        </view>
+        <!-- 配送费（仅外卖且配送费>0时显示） -->
+        <view wx:if="{{item.mealType === 'takeout' && item.deliveryFee > 0}}" class="order-item delivery-item">
+          <view class="item-info">
+            <text class="item-name">配送费</text>
+          </view>
+          <view class="item-detail">
+            <text class="item-quantity"></text>
+            <text class="item-price"></text>
+            <text class="item-total">¥{{item.deliveryFee}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="order-footer">
+        <text>共 {{item.items.length}} 件商品</text>
+        <text class="order-total">总计 ¥{{item.total}}</text>
+      </view>
+    </view>
+    <view wx:if="{{orders.length===0}}" class="empty">暂无已下单订单</view>
+  </view>
+</view>

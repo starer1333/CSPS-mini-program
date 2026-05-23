@@ -1,0 +1,22 @@
+<view class="coupons">
+  <view class="tabs">
+    <view class="tab {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">未使用</view>
+    <view class="tab {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">已使用</view>
+    <view class="tab {{currentTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2">已过期</view>
+  </view>
+  
+  <scroll-view scroll-y class="coupon-list">
+    <view wx:for="{{filteredCoupons}}" wx:key="id" class="coupon-card {{item.status}}">
+      <view class="coupon-left">
+        <text class="coupon-name">{{item.name}}</text>
+        <text class="coupon-desc">满{{item.dishName}}可用</text>
+        <text class="coupon-source">{{item.source}}</text>
+      </view>
+      <view class="coupon-right">
+        <text class="coupon-value">¥{{item.value}}</text>
+        <text class="coupon-expire">有效期至{{item.expireDate}}</text>
+      </view>
+    </view>
+    <view wx:if="{{filteredCoupons.length === 0}}" class="empty">暂无优惠券</view>
+  </scroll-view>
+</view>

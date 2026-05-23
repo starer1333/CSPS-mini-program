@@ -1,0 +1,26 @@
+<view class="cart-popup" wx:if="{{visible}}">
+  <view class="mask" bindtap="hide"></view>
+  <view class="popup-content">
+    <view class="header">购物车</view>
+    <scroll-view scroll-y class="cart-list">
+      <view wx:for="{{cartList}}" wx:key="key" class="cart-item">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="item-img"></image>
+        <view class="item-info">
+          <text class="item-name">{{item.dishName}}</text>
+          <text class="item-specs">{{item.specsDesc}}</text>
+        </view>
+        <view class="item-price">¥{{item.totalPrice}}</view>
+        <view class="item-quantity">
+          <text class="quantity-btn" bindtap="decrease" data-key="{{item.key}}">-</text>
+          <text class="quantity-num">{{item.quantity}}</text>
+          <text class="quantity-btn" bindtap="increase" data-key="{{item.key}}">+</text>
+        </view>
+        <text class="delete-btn" bindtap="remove" data-key="{{item.key}}">删除</text>
+      </view>
+    </scroll-view>
+    <view class="footer">
+      <text class="total">合计：¥{{total}}</text>
+      <button class="settle-btn" bindtap="goToCheckout">去结算</button>
+    </view>
+  </view>
+</view>

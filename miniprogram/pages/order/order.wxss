@@ -1,0 +1,282 @@
+.order-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8;
+}
+
+/* 主要内容区 */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* 左侧分类 */
+.category-side {
+  width: 200rpx;               /* 稍宽一点，避免文字换行重叠 */
+  background-color: #fff;
+  height: 100%;
+}
+
+.category-scroll {
+  height: 100%;
+}
+
+.category-item {
+  min-height: 90rpx;
+  line-height: 1.4;
+  padding: 20rpx 10rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  border-bottom: 2rpx solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+}
+
+.category-item.active {
+  color: #ff9f1c;              /* 橙色 */
+  font-weight: bold;
+  background-color: #fff8f0;
+  position: relative;
+}
+
+.category-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6rpx;
+  height: 100%;
+  background-color: #ff9f1c;    /* 橙色 */
+}
+
+/* 右侧内容区 */
+.content-side {
+  flex: 1;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 子分类（横向滚动） */
+.sub-categories {
+  background-color: #fff;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.sub-scroll {
+  white-space: nowrap;
+  padding: 0 20rpx;
+}
+
+.sub-item {
+  display: inline-block;
+  padding: 12rpx 30rpx;
+  margin-right: 20rpx;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.sub-item.active {
+  background-color: #ff9f1c;    /* 橙色 */
+  color: #fff;
+}
+
+/* 菜品列表 */
+.dish-scroll {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.dish-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+  padding: 30rpx;
+  display: flex;
+  position: relative;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
+}
+
+.dish-img {
+  width: 220rpx;                /* 图片变大，占卡片一半左右 */
+  height: 220rpx;
+  border-radius: 16rpx;
+  margin-right: 24rpx;
+  object-fit: cover;
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dish-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.dish-desc {
+  font-size: 26rpx;
+  color: #999;
+  line-height: 1.4;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 尺寸价格 */
+.size-prices {
+  display: flex;
+  gap: 30rpx;
+  margin-bottom: 10rpx;
+  flex-wrap: wrap;
+}
+
+.size-item {
+  display: flex;
+  align-items: baseline;
+}
+
+.size {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 8rpx;
+}
+
+.price {
+  font-size: 28rpx;
+  color: #ff3b30;              /* 橙色价格 */
+  font-weight: bold;
+}
+
+/* 会员价标签 */
+.member-price-tag {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 8rpx;
+  background-color: #fff8f0;    /* 浅橙色背景 */
+  padding: 6rpx 14rpx;
+  border-radius: 30rpx;
+  width: fit-content;
+}
+
+.member-label {
+  font-size: 22rpx;
+  color: #ff3b30;
+  background-color: #ffd7cc;
+  padding: 4rpx 12rpx;
+  border-radius: 30rpx;
+  font-weight: 500;
+}
+
+.price-group {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.member-price {
+  font-size: 28rpx;
+  color: #ff3b30;
+  font-weight: bold;
+}
+
+.original-price {
+  font-size: 24rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* 红色圆形加号按钮（极小） */
+.add-btn {
+  position: absolute !important;
+  right: 25rpx !important;
+  bottom: 15rpx !important;
+  width: 35rpx !important;
+  height: 35rpx !important;
+  line-height: 20rpx !important;
+  text-align: center !important;
+  background-color: #ff3b30 !important;   
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 25rpx !important;
+  transform: translateY(2rpx)!important;  /* 向下移动2rpx，数值可调 */
+  font-weight: bold !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  z-index: 10 !important;
+  min-width: 20rpx !important;
+}
+
+.add-btn::after {
+  border: none !important;
+}
+
+/* 底部购物车栏 */
+.cart-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #fff;
+  border-top: 2rpx solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  box-shadow: 0 -4rpx 12rpx rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+.cart-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.cart-total {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff9f1c;              /* 橙色 */
+}
+
+.settle-btn {
+  background-color: #ff9f1c;    /* 橙色按钮 */
+  color: #fff;
+  width: 200rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.settle-btn::after {
+  border: none;
+}

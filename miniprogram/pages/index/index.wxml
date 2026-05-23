@@ -1,0 +1,31 @@
+<view class="index">
+  <!-- 轮播图 -->
+  <swiper indicator-dots autoplay circular>
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-img"></image>
+    </swiper-item>
+  </swiper>
+  
+  <!-- 客服联系方式 -->
+  <view class="contact">
+    <text class="title">客服联系方式</text>
+    <text>微信：pizza123</text>
+    <image src="/images/wechat-qr.png" mode="widthFix" class="qr"></image>
+  </view>
+  
+  <!-- 用餐方式选择卡片 -->
+  <view class="meal-section">
+    <view class="meal-card" bindtap="selectMeal" data-type="dinein">
+      <text class="meal-name">在店堂食</text>
+      <text class="meal-en">DINE IN</text>
+    </view>
+    <view class="meal-card" bindtap="selectMeal" data-type="takeout">
+      <text class="meal-name">外卖配送</text>
+      <text class="meal-en">DELIVERY</text>
+    </view>
+    <view class="meal-card" bindtap="selectMeal" data-type="delivery">
+      <text class="meal-name">到店自取</text>
+      <text class="meal-en">SELF PICKUP</text>
+    </view>
+  </view>
+</view>

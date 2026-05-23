@@ -1,0 +1,85 @@
+<view class="checkout">
+  <!-- 用餐方式信息展示 -->
+  <view class="section" wx:if="{{mealInfo}}">
+    <text class="title">用餐方式</text>
+    <view class="meal-display">
+      <block wx:if="{{mealInfo.type === 'dinein'}}">堂食 · {{mealInfo.tableNo}}号桌</block>
+      <block wx:elif="{{mealInfo.type === 'takeout'}}">外卖配送</block>
+      <block wx:elif="{{mealInfo.type === 'delivery'}}">到店自取</block>
+    </view>
+  </view>
+
+  <!-- 外卖地址输入（仅外卖） -->
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'takeout'}}">
+    <text class="title">配送地址</text>
+    <input class="address-input" placeholder="请填写详细地址" bindinput="onAddressInput" value="{{address}}" />
+  </view>
+
+  <!-- 自取时间选择（仅自取） -->
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'delivery'}}">
+    <text class="title">自取时间</text>
+    <input class="time-input" placeholder="请填写自取时间（例如：12:30）" bindinput="onPickupTimeInput" value="{{pickupTime}}" />
+  </view>
+  <!-- 堂食桌号显示（只读） -->
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'dinein'}}">
+    <text class="title">桌号</text>
+    <view class="table-display">{{mealInfo.tableNo || '未扫描'}}</view>
+  </view>
+
+  <!-- 商品清单 -->
+  <view class="section">
+    <text class="title">商品清单</text>
+    <view wx:for="{{cartList}}" wx:key="key" class="cart-item">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="item-img"></image>
+      <view class="item-info">
+        <view class="item-header">
+          <text class="item-name">{{item.dishName}}</text>
+          <text class="item-price">¥{{item.totalPrice}}</text>
+        </view>
+        <text class="item-specs">{{item.specsDesc}}</text>
+        <view class="item-footer">
+          <text class="item-quantity">x{{item.quantity}}</text>
+          <text class="item-unit-price">¥{{item.unitPrice}}/份</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+ <!-- 配送费 - 仅在外卖时显示 -->
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'takeout'}}">
+   <view class="row">
+    <text>配送费</text>
+    <text wx:if="{{deliveryFee > 0}}">¥{{deliveryFee}}</text>
+    <text wx:else class="free-delivery">免配送费</text>
+   </view>
+  </view>
+
+  <!-- 总计 -->
+  <view class="section total-section">
+    <view class="row total">
+      <text>总计</text>
+      <text>¥{{total}}</text>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="section">
+    <text class="title">备注</text>
+    <input class="remark-input" placeholder="例如：少辣" bindinput="onRemarkInput" />
+  </view>
+
+  <!-- 支付方式 -->
+  <view class="section">
+    <text class="title">支付方式</text>
+    <view class="payment-options">
+      <view class="payment-option {{payment==='wechat'?'active':''}}" bindtap="selectPayment" data-type="wechat">
+        <text>微信支付</text>
+      </view>
+      <view class="payment-option {{payment==='alipay'?'active':''}}" bindtap="selectPayment" data-type="alipay">
+        <text>支付宝</text>
+      </view>
+    </view>
+  </view>
+
+  <button class="submit-btn" bindtap="submitOrder">提交订单</button>
+</view>

@@ -1,0 +1,11 @@
+<view class="scan-page">
+  <view class="header">
+    <text class="title">扫描桌号二维码</text>
+  </view>
+  <view class="scan-area">
+    <button class="scan-btn" bindtap="scan">点击扫码</button>
+    <text wx:if="{{tableNo}}" class="table-no">桌号：{{tableNo}}</text>
+  </view>
+  <view class="tip">请扫描桌上二维码，扫描成功后自动进入点餐</view>
+  <button wx:if="{{tableNo}}" class="confirm-btn" bindtap="goToOrder">确认并开始点餐</button>
+</view>

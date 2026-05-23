@@ -1,0 +1,72 @@
+<view class="dish-detail" wx:if="{{dish}}">
+  <image src="{{dish.imageUrl}}" mode="aspectFill" class="main-img"></image>
+  
+  <view class="content">
+    <text class="name">{{dish.name}}</text>
+    <text class="desc">{{dish.description}}</text>
+    
+    <!-- 尺寸选择 -->
+    <view wx:if="{{dish.specs.sizes && dish.specs.sizes.length}}" class="spec-section">
+      <text class="section-title">尺寸</text>
+      <view class="spec-group">
+        <view wx:for="{{dish.specs.sizes}}" wx:key="index"
+              class="spec-item {{selectedSize===index?'active':''}}"
+              bindtap="selectSize" data-index="{{index}}">
+          <text>{{item.name}}</text>
+          <text wx:if="{{item.price>0}}" class="spec-price">+¥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 饼底/卷边选择 -->
+    <view wx:if="{{dish.specs.crusts && dish.specs.crusts.length}}" class="spec-section">
+      <text class="section-title">饼底/卷边</text>
+      <view class="spec-group">
+        <view wx:for="{{dish.specs.crusts}}" wx:key="index"
+              class="spec-item {{selectedCrust===index?'active':''}}"
+              bindtap="selectCrust" data-index="{{index}}">
+          <text>{{item.name}}</text>
+          <text wx:if="{{item.price>0}}" class="spec-price">+¥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 附加配料（多选） -->
+    <view wx:if="{{dish.specs.toppings && dish.specs.toppings.length}}" class="spec-section">
+      <text class="section-title">附加配料</text>
+      <view class="spec-group">
+        <view wx:for="{{dish.specs.toppings}}" wx:key="index"
+              class="spec-item {{selectedToppings.includes(index)?'active':''}}"
+              bindtap="toggleTopping" data-index="{{index}}">
+          <text>{{item.name}}</text>
+          <text wx:if="{{item.price>0}}" class="spec-price">+¥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 数量选择 -->
+    <view class="quantity-section">
+      <text class="section-title">数量</text>
+      <view class="quantity-control">
+        <text class="quantity-btn" bindtap="decreaseQuantity">-</text>
+        <text class="quantity-num">{{quantity}}</text>
+        <text class="quantity-btn" bindtap="increaseQuantity">+</text>
+      </view>
+    </view>
+    
+    <!-- 价格信息 -->
+    <view class="price-info">
+      <view class="price-row">
+        <text class="price-label">会员价：</text>
+        <text class="member-price">¥{{memberPriceTotal}}</text>
+      </view>
+      <view class="price-row">
+        <text class="price-label">普通价：</text>
+        <text class="normal-price">¥{{normalPriceTotal}}</text>
+      </view>
+    </view>
+    
+    <!-- 加入购物车按钮 -->
+    <button class="add-cart-btn" bindtap="addToCart">加入购物车</button>
+  </view>
+</view>

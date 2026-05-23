@@ -1,0 +1,60 @@
+.index {
+  padding: 20rpx;
+}
+
+swiper {
+  width: 100%;
+  height: 45vh;         
+}
+
+.banner-img {
+  width: 100%;
+  height: 100%;          
+  object-fit: cover;    
+}
+.contact {
+  margin-top: 40rpx;
+  padding: 30rpx;
+  background: #f8f8f8;
+  border-radius: 16rpx;
+}
+.contact .title {
+  font-size: 36rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+.qr {
+  width: 200rpx;
+  height: 200rpx;
+  margin-top: 20rpx;
+}
+/* 在原有样式基础上添加以下内容 */
+.meal-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin: 40rpx 0;
+}
+.meal-card {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2rpx solid #ff9f1c;
+  box-shadow: 0 2rpx 8rpx rgba(255,159,28,0.1);
+}
+.meal-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #ff9f1c;
+  margin-bottom: 8rpx;
+}
+.meal-en {
+  font-size: 22rpx;
+  color: #999;
+  text-transform: uppercase;
+}
