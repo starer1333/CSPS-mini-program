@@ -8,7 +8,12 @@
     "pages/checkout/checkout",
     "pages/recharge/recharge",
     "pages/scan/scan",
-    "pages/coupon/coupon"
+    "pages/coupon/coupon",
+    "pages/orderDetail/orderDetail",
+    "pages/admin/index/index",
+    "pages/admin/weeklyReport/weeklyReport",
+    "pages/admin/orderManage/orderManage",
+    "pages/admin/dishManage/dishManage"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",
@@ -17,24 +22,12 @@
   },
   "tabBar": {
     "color": "#999",
-    "selectedColor": "#ff6b6b",
+    "selectedColor": "#ff9f1c",
     "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/order/order",
-        "text": "点餐"
-      },
-      {
-        "pagePath": "pages/orders/orders",
-        "text": "订单"
-      },
-      {
-        "pagePath": "pages/my/my",
-        "text": "我的"
-      }
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/order/order", "text": "点餐" },
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/my/my", "text": "我的" }
     ]
   },
   "style": "v2",
