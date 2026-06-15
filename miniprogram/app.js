@@ -5,10 +5,18 @@ App({
   },
   globalData: {
     userInfo: null,
-    isMember: false, // 会员状态，余额>0时为true
+    isMember: false,
     balance: 0,
     points: 0,
     mealInfo: null,
-    userCoupons:[]
+    userCoupons: [],
+    // 配送费配置（商家在后台可手动切换节假日）
+    deliveryConfig: {
+      normalFee: 5,
+      holidayFee: 10,
+      freeThreshold: 50,
+      isHoliday: false
+    },
+    adminPassword: '888888'
   }
 });
