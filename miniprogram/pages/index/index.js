@@ -1,12 +1,22 @@
 const app = getApp();
+const storeService = require('../../services/storeService.js');
 
 Page({
   data: {
-    banners: [
-      { id: 1, imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=640' },
-      { id: 2, imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=640' },
-      { id: 3, imageUrl: 'https://images.unsplash.com/photo-1561758033-7e924f619b47?w=640' }
-    ]
+    banners: [],
+    storeSettings: {}
+  },
+  onLoad() {
+    this.loadHomeData();
+  },
+  async loadHomeData() {
+    const [banners, storeSettings] = await Promise.all([
+      storeService.getBanners(),
+      storeService.getStoreSettings()
+    ]);
+    app.globalData.deliveryConfig = storeSettings.deliveryConfig;
+    app.globalData.storeSettings = storeSettings;
+    this.setData({ banners, storeSettings });
   },
   selectMeal(e) {
     const type = e.currentTarget.dataset.type;

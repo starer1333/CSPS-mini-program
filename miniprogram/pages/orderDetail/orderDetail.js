@@ -1,22 +1,19 @@
+const orderService = require('../../services/orderService.js');
+
 Page({
   data: {
     order: null
   },
-  onLoad(options) {
+  async onLoad(options) {
     const orderId = options.id;
-    this.loadOrder(orderId);
+    await this.loadOrder(orderId);
   },
-  loadOrder(orderId) {
-    const orders = wx.getStorageSync('orders') || [];
-    const order = orders.find(o => o.id === orderId);
+  async loadOrder(orderId) {
+    const order = await orderService.getOrder(orderId);
     this.setData({ order });
   },
   reorder() {
-    const cart = {};
-    this.data.order.items.forEach(item => {
-      const key = `${item.dishId}-${Date.now()}-${Math.random()}`;
-      cart[key] = item;
-    });
+    const cart = orderService.buildCartFromOrder(this.data.order);
     wx.setStorageSync('cart', cart);
     wx.switchTab({ url: '/pages/order/order' });
   }

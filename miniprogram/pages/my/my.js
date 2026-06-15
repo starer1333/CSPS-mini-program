@@ -1,4 +1,6 @@
 const app = getApp();
+const userService = require('../../services/userService.js');
+const couponService = require('../../services/couponService.js');
 
 Page({
   data: {
@@ -14,17 +16,28 @@ Page({
   },
 
   // 加载用户数据（从全局或本地模拟）
-  loadUserData() {
-    const global = app.globalData;
-    const userInfo = global.userInfo;
-    if (userInfo) {
+  async loadUserData() {
+    let user = userService.localUser();
+    if (!user && app.globalData.userInfo) {
+      user = {
+        nickname: app.globalData.userInfo.nickName,
+        avatarUrl: app.globalData.userInfo.avatarUrl,
+        balance: app.globalData.balance,
+        points: app.globalData.points
+      };
+    }
+    if (user) {
+      const coupons = await couponService.listUserCoupons(user._id || user.openid);
+      userService.syncToGlobal(app, user);
       this.setData({
-        userInfo,
-        isMember: global.balance > 0,
-        balance: global.balance || 0,
-        points: global.points || 0,
-        // 模拟优惠券数量，实际应从存储获取
-        couponCount: wx.getStorageSync('coupons')?.length || 0
+        userInfo: {
+          nickName: user.nickname,
+          avatarUrl: user.avatarUrl
+        },
+        isMember: Number(user.balance || 0) > 0,
+        balance: user.balance || 0,
+        points: user.points || 0,
+        couponCount: coupons.filter(item => item.status === 'unused').length
       });
     } else {
       this.setData({ userInfo: null });
@@ -36,19 +49,13 @@ Page({
     wx.getUserProfile({
       desc: '用于完善会员资料',
       success: (res) => {
-        const userInfo = res.userInfo;
-        app.globalData.userInfo = userInfo;
-        // 模拟新用户数据
-        app.globalData.balance = 0;
-        app.globalData.points = 0;
-        this.setData({
-          userInfo,
-          isMember: false,
-          balance: 0,
-          points: 0,
-          couponCount: 0
+        userService.login().then(() => {
+          return userService.updateProfile(res.userInfo);
+        }).then(user => {
+          userService.syncToGlobal(app, user);
+          this.loadUserData();
+          wx.showToast({ title: '登录成功', icon: 'success' });
         });
-        wx.showToast({ title: '登录成功', icon: 'success' });
       },
       fail: () => {
         wx.showToast({ title: '您拒绝了授权', icon: 'none' });
@@ -71,5 +78,8 @@ Page({
   },
   goToCoupons() {
     wx.navigateTo({ url: '/pages/coupon/coupon' });
+  },
+  goToAdmin() {
+    wx.navigateTo({ url: '/admin/dashboard/dashboard' });
   }
 });

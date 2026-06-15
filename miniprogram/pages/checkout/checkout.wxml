@@ -4,19 +4,19 @@
     <text class="title">用餐方式</text>
     <view class="meal-display">
       <block wx:if="{{mealInfo.type === 'dinein'}}">堂食 · {{mealInfo.tableNo}}号桌</block>
-      <block wx:elif="{{mealInfo.type === 'takeout'}}">外卖配送</block>
-      <block wx:elif="{{mealInfo.type === 'delivery'}}">到店自取</block>
+      <block wx:elif="{{mealInfo.type === 'delivery'}}">外卖配送</block>
+      <block wx:elif="{{mealInfo.type === 'pickup'}}">到店自取</block>
     </view>
   </view>
 
   <!-- 外卖地址输入（仅外卖） -->
-  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'takeout'}}">
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'delivery'}}">
     <text class="title">配送地址</text>
     <input class="address-input" placeholder="请填写详细地址" bindinput="onAddressInput" value="{{address}}" />
   </view>
 
   <!-- 自取时间选择（仅自取） -->
-  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'delivery'}}">
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'pickup'}}">
     <text class="title">自取时间</text>
     <input class="time-input" placeholder="请填写自取时间（例如：12:30）" bindinput="onPickupTimeInput" value="{{pickupTime}}" />
   </view>
@@ -46,7 +46,7 @@
   </view>
 
  <!-- 配送费 - 仅在外卖时显示 -->
-  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'takeout'}}">
+  <view class="section" wx:if="{{mealInfo && mealInfo.type === 'delivery'}}">
    <view class="row">
     <text>配送费</text>
     <text wx:if="{{deliveryFee > 0}}">¥{{deliveryFee}}</text>

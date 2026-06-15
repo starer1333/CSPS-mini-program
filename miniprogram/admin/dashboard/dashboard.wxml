@@ -1,0 +1,14 @@
+<view class="admin-page">
+  <view class="admin-header">
+    <text class="admin-title">商家后台</text>
+    <text class="cloud-state">运营配置</text>
+  </view>
+  <view class="dashboard-panel">
+    <view class="dashboard-grid">
+      <view wx:for="{{menus}}" wx:key="path" class="dashboard-link" bindtap="goPage" data-path="{{item.path}}">
+        <text class="link-title">{{item.title}}</text>
+        <text class="link-desc">{{item.desc}}</text>
+      </view>
+    </view>
+  </view>
+</view>

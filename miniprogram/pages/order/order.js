@@ -1,23 +1,10 @@
-const dishData = require('../../data/dishes.js');
+const foodService = require('../../services/foodService.js');
 
 Page({
   data: {
-    mainCategories: [
-      '比萨',
-      '牛排·沙拉',
-      '炸鸡·鱼饼火鸡面',
-      '国潮炸鸡',
-      '甜品·蛋挞',
-      '意面·焗饭·炒饭',
-      '汉堡',
-      '休闲小吃·拼盘',
-      '饮品'
-    ],
-    subCategories: {
-      '比萨': ['爆浆比萨招牌必吃', '12寸比萨', '9英寸铁盘比萨', '9英寸薄饼比萨'],
-      '饮品': ['超级果蔬', '手作鲜榨', '古法烤梨', '柠檬茶', '水果茶', '原叶奶茶', '咖啡(冷/热)']
-    },
-    allDishes: dishData.dishes,
+    mainCategories: [],
+    subCategories: {},
+    allDishes: {},
     activeMainIndex: 0,
     activeSubName: '',
     currentDishes: [],
@@ -27,7 +14,7 @@ Page({
   },
 
   onLoad() {
-    this.initMainCategory(0);
+    this.loadMenu();
     this.loadCart();
   },
 
@@ -35,8 +22,25 @@ Page({
     this.loadCart();
   },
 
+  async loadMenu() {
+    wx.showLoading({ title: '加载菜单' });
+    try {
+      const menu = await foodService.getMenuData();
+      this.setData({
+        mainCategories: menu.mainCategories,
+        subCategories: menu.subCategories,
+        allDishes: menu.allDishes
+      }, () => {
+        this.initMainCategory(0);
+      });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
   initMainCategory(index) {
     const mainName = this.data.mainCategories[index];
+    if (!mainName) return;
     let subName = '';
     if (this.data.subCategories[mainName] && this.data.subCategories[mainName].length > 0) {
       subName = this.data.subCategories[mainName][0];

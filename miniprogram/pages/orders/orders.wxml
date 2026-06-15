@@ -2,8 +2,8 @@
   <view class="order-list">
     <view wx:for="{{orders}}" wx:key="id" class="order-card" bindtap="goToDetail" data-id="{{item.id}}">
       <view class="order-header">
-        <text class="order-id">订单号：{{item.id}}</text>
-        <text class="order-status order-placed">已下单</text>
+        <text class="order-id">订单号：{{item.orderNo || item.id}}</text>
+        <text class="order-status order-placed">{{item.status}}</text>
       </view>
       <view class="order-time">{{item.createTime}}</view>
       
@@ -21,7 +21,7 @@
           </view>
         </view>
         <!-- 配送费（仅外卖且配送费>0时显示） -->
-        <view wx:if="{{item.mealType === 'takeout' && item.deliveryFee > 0}}" class="order-item delivery-item">
+        <view wx:if="{{item.mealType === 'delivery' && item.deliveryFee > 0}}" class="order-item delivery-item">
           <view class="item-info">
             <text class="item-name">配送费</text>
           </view>

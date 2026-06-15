@@ -1,4 +1,6 @@
 const app = getApp();
+const orderService = require('../../services/orderService.js');
+const { calcDeliveryFee, moneyText } = require('../../utils/price.js');
 
 Page({
   data: {
@@ -28,9 +30,9 @@ Page({
       this.calcDeliveryFee();
     });
     if (mealInfo) {
-      if (mealInfo.type === 'takeout') {
+      if (mealInfo.type === 'delivery') {
         this.setData({ address: '', pickupTime: '' });
-      } else if (mealInfo.type === 'delivery') {
+      } else if (mealInfo.type === 'pickup') {
         this.setData({ address: '', pickupTime: '' });
       } else if (mealInfo.type === 'dinein') {
         this.setData({ address: '', pickupTime: '' });
@@ -58,20 +60,10 @@ Page({
     const { mealInfo, subTotal, deliveryConfig } = this.data;
     if (!deliveryConfig) return;
 
-    let fee = 0;
-    if (mealInfo && mealInfo.type === 'takeout') {
-      const baseFee = deliveryConfig.isHoliday ? deliveryConfig.holidayFee : deliveryConfig.normalFee;
-      if (parseFloat(subTotal) >= deliveryConfig.freeThreshold) {
-        fee = 0;
-      } else {
-        fee = baseFee;
-      }
-    } else {
-      fee = 0;
-    }
+    const fee = calcDeliveryFee(mealInfo && mealInfo.type, subTotal, deliveryConfig);
     this.setData({
       deliveryFee: fee,
-      total: (parseFloat(subTotal) + fee).toFixed(2)
+      total: moneyText(parseFloat(subTotal) + fee)
     });
   },
   onRemarkInput(e) {
@@ -97,11 +89,11 @@ Page({
       wx.showToast({ title: '请先扫描桌号', icon: 'none' });
       return;
     }
-    if (type === 'takeout' && !this.data.address) {
+    if (type === 'delivery' && !this.data.address) {
       wx.showToast({ title: '请填写外卖地址', icon: 'none' });
       return;
     }
-    if (type === 'delivery' && !this.data.pickupTime) {
+    if (type === 'pickup' && !this.data.pickupTime) {
       wx.showToast({ title: '请填写自取时间', icon: 'none' });
       return;
     }
@@ -115,24 +107,19 @@ Page({
       }
     });
   },
-  createOrder() {
-    const orders = wx.getStorageSync('orders') || [];
-    const newOrder = {
-      id: Date.now().toString(),
-      total: this.data.total,
-      status: '已付款',
-      createTime: new Date().toLocaleString(),
-      mealType: this.data.mealInfo.type,
+  async createOrder() {
+    await orderService.createOrder({
+      cartList: this.data.cartList,
+      mealInfo: this.data.mealInfo,
+      diningType: this.data.mealInfo.type,
       tableNo: this.data.mealInfo.tableNo || '',
-      address: this.data.address,
+      address: this.data.address ? { detail: this.data.address } : {},
       pickupTime: this.data.pickupTime,
       remark: this.data.remark,
       payment: this.data.payment,
       deliveryFee: this.data.deliveryFee,
-      items: this.data.cartList
-    };
-    orders.unshift(newOrder);
-    wx.setStorageSync('orders', orders);
+      totalAmount: Number(this.data.total)
+    });
     wx.setStorageSync('cart', {});
     wx.showToast({ title: '下单成功', icon: 'success' });
     setTimeout(() => {

@@ -1,7 +1,21 @@
-// app.js
 App({
   onLaunch() {
-    console.log('小程序启动');
+    if (wx.cloud) {
+      wx.cloud.init({
+        traceUser: true
+      });
+    }
+    this.loadRuntimeSettings();
+  },
+  async loadRuntimeSettings() {
+    try {
+      const storeService = require('./services/storeService.js');
+      const settings = await storeService.getStoreSettings();
+      this.globalData.deliveryConfig = settings.deliveryConfig;
+      this.globalData.storeSettings = settings;
+    } catch (err) {
+      console.warn('门店配置加载失败，使用本地默认配置', err);
+    }
   },
   globalData: {
     userInfo: null,
@@ -17,6 +31,7 @@ App({
       freeThreshold: 50,
       isHoliday: false
     },
+    storeSettings: null,
     adminPassword: '888888'
   }
 });

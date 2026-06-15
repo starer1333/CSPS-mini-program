@@ -1,0 +1,32 @@
+<view class="admin-page">
+  <view class="admin-header">
+    <text class="admin-title">{{title}}</text>
+    <text class="cloud-state">{{cloudReady ? '云数据库' : '本地预览'}}</text>
+  </view>
+
+  <view class="form-panel">
+    <view wx:for="{{formFields}}" wx:key="key" class="field">
+      <text class="field-label">{{item.label}}</text>
+      <input class="field-input" placeholder="{{item.placeholder || item.label}}" value="{{item.value}}" data-key="{{item.key}}" bindinput="onInput" />
+    </view>
+    <view class="actions">
+      <button class="primary-btn" bindtap="saveItem">{{editingId ? '保存修改' : '新增'}}</button>
+      <button class="plain-btn" bindtap="cancelEdit" wx:if="{{editingId}}">取消</button>
+    </view>
+  </view>
+
+  <view class="list-panel">
+    <view wx:for="{{rows}}" wx:key="id" class="row-card">
+      <view wx:for="{{item.cells}}" wx:for-item="cell" wx:key="label" class="cell">
+        <text class="cell-label">{{cell.label}}</text>
+        <text class="cell-value">{{cell.value}}</text>
+      </view>
+      <view class="row-actions">
+        <button class="plain-btn" data-id="{{item.id}}" bindtap="editItem">编辑</button>
+        <button class="danger-btn" data-id="{{item.id}}" bindtap="removeItem">删除</button>
+      </view>
+    </view>
+    <view wx:if="{{!loading && rows.length === 0}}" class="empty">暂无数据</view>
+    <view wx:if="{{loading}}" class="empty">加载中</view>
+  </view>
+</view>

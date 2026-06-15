@@ -1,3 +1,6 @@
+const couponService = require('../../services/couponService.js');
+const userService = require('../../services/userService.js');
+
 Page({
   data: {
     currentTab: 0,
@@ -9,8 +12,9 @@ Page({
     this.loadCoupons();
   },
 
-  loadCoupons() {
-    const coupons = wx.getStorageSync('userCoupons') || [];
+  async loadCoupons() {
+    const user = userService.localUser();
+    const coupons = await couponService.listUserCoupons(user && (user._id || user.openid));
     this.setData({ coupons }, () => {
       this.filterCoupons();
     });

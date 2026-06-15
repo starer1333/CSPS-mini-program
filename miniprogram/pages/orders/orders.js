@@ -1,3 +1,5 @@
+const orderService = require('../../services/orderService.js');
+
 Page({
   data: {
     orders: []
@@ -5,8 +7,8 @@ Page({
   onShow() {
     this.loadOrders();
   },
-  loadOrders() {
-    const orders = wx.getStorageSync('orders') || [];
+  async loadOrders() {
+    const orders = await orderService.listOrders();
     this.setData({ orders });
   },
   goToDetail(e) {

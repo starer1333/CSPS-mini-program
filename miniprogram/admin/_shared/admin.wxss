@@ -1,0 +1,148 @@
+.admin-page {
+  min-height: 100vh;
+  background: #f6f7f9;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.admin-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.cloud-state {
+  font-size: 22rpx;
+  color: #697586;
+}
+
+.form-panel,
+.list-panel,
+.dashboard-panel {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 22rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 6rpx 18rpx rgba(31, 41, 51, 0.06);
+}
+
+.field {
+  margin-bottom: 18rpx;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8rpx;
+  color: #4b5563;
+  font-size: 24rpx;
+}
+
+.field-input {
+  height: 72rpx;
+  padding: 0 18rpx;
+  background: #f8fafc;
+  border: 1rpx solid #d8dee8;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+}
+
+.actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.primary-btn,
+.plain-btn,
+.danger-btn {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+}
+
+.primary-btn {
+  background: #ff9f1c;
+  color: #fff;
+}
+
+.plain-btn {
+  background: #edf2f7;
+  color: #334155;
+}
+
+.danger-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.row-card {
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #edf2f7;
+}
+
+.cell {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 8rpx;
+  font-size: 24rpx;
+}
+
+.cell-label {
+  color: #697586;
+}
+
+.cell-value {
+  color: #1f2933;
+  text-align: right;
+  max-width: 440rpx;
+  word-break: break-all;
+}
+
+.row-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.empty {
+  color: #697586;
+  text-align: center;
+  padding: 48rpx 0;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.dashboard-link {
+  min-height: 112rpx;
+  padding: 18rpx;
+  border-radius: 8rpx;
+  background: #fff;
+  box-shadow: 0 6rpx 18rpx rgba(31, 41, 51, 0.06);
+}
+
+.link-title {
+  display: block;
+  font-size: 28rpx;
+  color: #1f2933;
+  font-weight: 600;
+}
+
+.link-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #697586;
+}

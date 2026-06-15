@@ -1,7 +1,7 @@
 <view class="order-detail" wx:if="{{order}}">
   <view class="detail-header">
     <text class="status {{order.status === '已付款' ? 'paid' : (order.status === '已完成' ? 'completed' : 'cancelled')}}">{{order.status}}</text>
-    <text class="order-id">订单号：{{order.id}}</text>
+    <text class="order-id">订单号：{{order.orderNo || order.id}}</text>
   </view>
   
   <view class="info-card">
@@ -13,11 +13,11 @@
       <text class="label">用餐方式</text>
       <text class="value">堂食 · {{order.tableNo}}号桌</text>
     </view>
-    <view class="info-row" wx:if="{{order.mealType === 'takeout'}}">
-      <text class="label">用餐方式</text>
-      <text class="value">外卖配送 · {{order.address}}</text>
-    </view>
     <view class="info-row" wx:if="{{order.mealType === 'delivery'}}">
+      <text class="label">用餐方式</text>
+      <text class="value">外卖配送 · {{order.address.detail || order.address}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.mealType === 'pickup'}}">
       <text class="label">用餐方式</text>
       <text class="value">到店自取 · {{order.pickupTime}}</text>
     </view>
@@ -46,9 +46,9 @@
   <view class="total-card">
     <view class="total-row">
       <text>商品合计</text>
-      <text>¥{{(order.total - (order.deliveryFee || 0)).toFixed(2)}}</text>
+      <text>¥{{order.goodsAmountText}}</text>
     </view>
-    <view class="total-row" wx:if="{{order.mealType === 'takeout'}}">
+    <view class="total-row" wx:if="{{order.mealType === 'delivery'}}">
       <text>配送费</text>
       <text wx:if="{{order.deliveryFee > 0}}">¥{{order.deliveryFee}}</text>
       <text wx:else class="free">免配送费</text>

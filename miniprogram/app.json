@@ -10,10 +10,18 @@
     "pages/scan/scan",
     "pages/coupon/coupon",
     "pages/orderDetail/orderDetail",
-    "pages/admin/index/index",
-    "pages/admin/weeklyReport/weeklyReport",
-    "pages/admin/orderManage/orderManage",
-    "pages/admin/dishManage/dishManage"
+    "admin/dashboard/dashboard",
+    "admin/foods/foods",
+    "admin/foodEdit/foodEdit",
+    "admin/categories/categories",
+    "admin/orders/orders",
+    "admin/members/members",
+    "admin/coupons/coupons",
+    "admin/recharges/recharges",
+    "admin/tables/tables",
+    "admin/banners/banners",
+    "admin/settings/settings",
+    "admin/reports/reports"
   ],
   "window": {
     "navigationBarBackgroundColor": "#ffffff",

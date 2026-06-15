@@ -30,6 +30,18 @@
         </view>
       </view>
     </view>
+
+    <view wx:if="{{dish.specs.sauces && dish.specs.sauces.length}}" class="spec-section">
+      <text class="section-title">酱料/口味</text>
+      <view class="spec-group">
+        <view wx:for="{{dish.specs.sauces}}" wx:key="index"
+              class="spec-item {{selectedSauce===index?'active':''}}"
+              bindtap="selectSauce" data-index="{{index}}">
+          <text>{{item.name}}</text>
+          <text wx:if="{{item.price>0}}" class="spec-price">+¥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
     
     <!-- 附加配料（多选） -->
     <view wx:if="{{dish.specs.toppings && dish.specs.toppings.length}}" class="spec-section">

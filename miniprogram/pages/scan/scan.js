@@ -10,11 +10,11 @@ Page({
       scanType: ['qrCode'],
       success: (res) => {
         let tableNo = res.result;
-        // 尝试从URL参数中提取桌号（假设二维码内容为 https://xxx?table=12）
-        const match = res.result.match(/[?&]table=(\d+)/);
+        // 兼容后台生成的 table/tableNo 参数和纯桌号二维码。
+        const match = res.result.match(/[?&](table|tableNo)=([^&]+)/);
         if (match) {
-          tableNo = match[1];
-        } else if (/^\d+$/.test(res.result)) {
+          tableNo = decodeURIComponent(match[2]);
+        } else if (/^[A-Za-z0-9-]+$/.test(res.result)) {
           tableNo = res.result;
         }
         this.setData({ tableNo });

@@ -46,6 +46,10 @@
       <image class="menu-icon" src="/images/icons/exchange.png"></image>
       <text>充值兑换</text>
     </view>
+    <view class="menu-item" bindtap="goToAdmin">
+      <image class="menu-icon" src="/images/icons/info.png"></image>
+      <text>商家后台</text>
+    </view>
     <!-- 预留更多入口 -->
   </view>
 </view>
