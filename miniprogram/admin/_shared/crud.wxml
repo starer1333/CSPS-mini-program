@@ -7,7 +7,8 @@
   <view class="form-panel">
     <view wx:for="{{formFields}}" wx:key="key" class="field">
       <text class="field-label">{{item.label}}</text>
-      <input class="field-input" placeholder="{{item.placeholder || item.label}}" value="{{item.value}}" data-key="{{item.key}}" bindinput="onInput" />
+      <textarea wx:if="{{item.type === 'textarea'}}" class="field-textarea" placeholder="{{item.placeholder || item.label}}" value="{{item.value}}" data-key="{{item.key}}" bindinput="onInput"></textarea>
+      <input wx:else class="field-input" placeholder="{{item.placeholder || item.label}}" value="{{item.value}}" data-key="{{item.key}}" bindinput="onInput" />
     </view>
     <view class="actions">
       <button class="primary-btn" bindtap="saveItem">{{editingId ? '保存修改' : '新增'}}</button>

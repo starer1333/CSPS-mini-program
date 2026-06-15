@@ -2,6 +2,8 @@ Page({
   data: {
     menus: [
       { title: '菜品管理', desc: '菜品上下架与价格', path: '/admin/foods/foods' },
+      { title: '规格组管理', desc: '尺寸、酱料、加料分组', path: '/admin/foodEdit/foodEdit' },
+      { title: '规格项管理', desc: '12寸、番茄酱、加芝士等', path: '/admin/optionItems/optionItems' },
       { title: '分类管理', desc: '主分类和子分类', path: '/admin/categories/categories' },
       { title: '订单管理', desc: '订单状态与隐藏', path: '/admin/orders/orders' },
       { title: '会员管理', desc: '余额积分与状态', path: '/admin/members/members' },

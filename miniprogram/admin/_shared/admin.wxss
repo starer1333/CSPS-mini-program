@@ -53,6 +53,18 @@
   font-size: 26rpx;
 }
 
+.field-textarea {
+  width: 100%;
+  min-height: 150rpx;
+  padding: 18rpx;
+  box-sizing: border-box;
+  background: #f8fafc;
+  border: 1rpx solid #d8dee8;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
 .actions {
   display: flex;
   gap: 16rpx;

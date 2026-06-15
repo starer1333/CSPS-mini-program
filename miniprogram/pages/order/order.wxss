@@ -204,27 +204,28 @@
   text-decoration: line-through;
 }
 
-/* 红色圆形加号按钮（极小） */
+/* 红色圆形加号按钮 */
 .add-btn {
   position: absolute !important;
   right: 25rpx !important;
-  bottom: 15rpx !important;
-  width: 35rpx !important;
-  height: 35rpx !important;
-  line-height: 20rpx !important;
-  text-align: center !important;
+  bottom: 22rpx !important;
+  width: 48rpx !important;
+  height: 48rpx !important;
+  line-height: 48rpx !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   background-color: #ff3b30 !important;   
   color: #ffffff !important;
   border-radius: 50% !important;
-  font-size: 25rpx !important;
-  transform: translateY(2rpx)!important;  /* 向下移动2rpx，数值可调 */
+  font-size: 34rpx !important;
   font-weight: bold !important;
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
   box-shadow: none !important;
   z-index: 10 !important;
-  min-width: 20rpx !important;
+  min-width: 48rpx !important;
 }
 
 .add-btn::after {

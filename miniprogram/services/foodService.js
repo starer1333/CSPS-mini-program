@@ -44,7 +44,8 @@ function normalizeFood(food, groups = [], itemsByGroupId = {}) {
 
   groups.sort(sortBySortField).forEach(group => {
     const key = groupKey(group.name || '');
-    const items = (itemsByGroupId[group._id] || [])
+    const groupId = group._id || group.id;
+    const items = (itemsByGroupId[groupId] || [])
       .filter(item => item.status !== false)
       .sort(sortBySortField)
       .map(item => ({
@@ -72,17 +73,110 @@ function normalizeFood(food, groups = [], itemsByGroupId = {}) {
     salesCount: Number(food.salesCount || 0),
     status: food.status !== false,
     sort: Number(food.sort || 0),
-    sizes: food.sizes || [],
+    sizes: getDisplaySizes(food, specs),
     specs
   };
 }
 
+function getDisplaySizes(food, specs) {
+  if (food.sizes && food.sizes.length) {
+    return food.sizes;
+  }
+  if (specs.sizes && specs.sizes.length) {
+    const basePrice = Number(food.normalPrice || food.basePrice || 0);
+    return specs.sizes.map(item => ({
+      size: item.name,
+      price: basePrice + Number(item.price || 0)
+    }));
+  }
+  return [{ size: '单份', price: Number(food.normalPrice || food.basePrice || 0) }];
+}
+
 function fallbackMenu() {
+  const localMenu = localAdminMenu();
+  if (localMenu) {
+    return localMenu;
+  }
   const allDishes = dishData.dishes;
   return {
     source: 'mock',
     mainCategories: MAIN_CATEGORIES,
     subCategories: SUB_CATEGORIES,
+    allDishes
+  };
+}
+
+function localAdminMenu() {
+  const foods = wx.getStorageSync('admin_foods') || [];
+  if (!foods.length) {
+    return null;
+  }
+
+  const categories = wx.getStorageSync('admin_categories') || [];
+  const optionGroups = wx.getStorageSync('admin_optionGroups') || [];
+  const optionItems = wx.getStorageSync('admin_optionItems') || [];
+
+  const categoryById = {};
+  categories.forEach(category => {
+    const id = category._id || category.id;
+    if (id) categoryById[id] = category;
+  });
+
+  const mainCategorySet = new Set();
+  const subCategories = {};
+  categories
+    .filter(item => item.status !== false)
+    .sort(sortBySortField)
+    .forEach(category => {
+      const isMain = Number(category.level || 1) === 1 || !category.parentId;
+      if (isMain) {
+        mainCategorySet.add(category.name);
+      } else {
+        const parent = categoryById[category.parentId];
+        const parentName = parent && parent.name;
+        if (!parentName) return;
+        if (!subCategories[parentName]) subCategories[parentName] = [];
+        subCategories[parentName].push(category.name);
+      }
+    });
+
+  const groupsByFoodId = {};
+  optionGroups.forEach(group => {
+    if (group.status === false) return;
+    const foodId = group.foodId;
+    if (!groupsByFoodId[foodId]) groupsByFoodId[foodId] = [];
+    groupsByFoodId[foodId].push(group);
+  });
+
+  const itemsByGroupId = {};
+  optionItems.forEach(item => {
+    const groupId = item.groupId;
+    if (!itemsByGroupId[groupId]) itemsByGroupId[groupId] = [];
+    itemsByGroupId[groupId].push(item);
+  });
+
+  const allDishes = {};
+  foods.filter(food => food.status !== false).sort(sortBySortField).forEach(food => {
+    const foodId = food._id || food.id;
+    const category = categoryById[food.categoryId];
+    const subCategory = categoryById[food.subCategoryId];
+    const mainName = food.categoryName || category && category.name || food.categoryId || '未分类';
+    const bucketName = food.subCategoryName || subCategory && subCategory.name || mainName;
+
+    mainCategorySet.add(mainName);
+    if (bucketName !== mainName) {
+      if (!subCategories[mainName]) subCategories[mainName] = [];
+      if (!subCategories[mainName].includes(bucketName)) subCategories[mainName].push(bucketName);
+    }
+
+    if (!allDishes[bucketName]) allDishes[bucketName] = [];
+    allDishes[bucketName].push(normalizeFood(food, groupsByFoodId[foodId] || [], itemsByGroupId));
+  });
+
+  return {
+    source: 'admin-local',
+    mainCategories: Array.from(mainCategorySet),
+    subCategories,
     allDishes
   };
 }
@@ -117,21 +211,24 @@ async function cloudMenu() {
 
   const groupsByFoodId = {};
   optionGroups.forEach(group => {
-    if (!groupsByFoodId[group.foodId]) groupsByFoodId[group.foodId] = [];
-    groupsByFoodId[group.foodId].push(group);
+    const foodId = group.foodId;
+    if (!groupsByFoodId[foodId]) groupsByFoodId[foodId] = [];
+    groupsByFoodId[foodId].push(group);
   });
 
   const itemsByGroupId = {};
   optionItems.forEach(item => {
-    if (!itemsByGroupId[item.groupId]) itemsByGroupId[item.groupId] = [];
-    itemsByGroupId[item.groupId].push(item);
+    const groupId = item.groupId;
+    if (!itemsByGroupId[groupId]) itemsByGroupId[groupId] = [];
+    itemsByGroupId[groupId].push(item);
   });
 
   const allDishes = {};
   foods.filter(food => food.status !== false).forEach(food => {
-    const normalized = normalizeFood(food, groupsByFoodId[food._id] || [], itemsByGroupId);
+    const foodId = food._id || food.id;
+    const normalized = normalizeFood(food, groupsByFoodId[foodId] || [], itemsByGroupId);
     const category = categoryById[food.subCategoryId] || categoryById[food.categoryId];
-    const bucketName = category && category.name;
+    const bucketName = food.subCategoryName || food.categoryName || category && category.name;
     if (!bucketName) return;
     if (!allDishes[bucketName]) allDishes[bucketName] = [];
     allDishes[bucketName].push(normalized);
@@ -150,6 +247,15 @@ async function cloudMenu() {
 async function getMenuData(force = false) {
   if (menuCache && !force) {
     return menuCache;
+  }
+  if (force || wx.getStorageSync('menuDirty')) {
+    const localMenu = localAdminMenu();
+    if (localMenu) {
+      menuCache = localMenu;
+      wx.setStorageSync('menuDirty', false);
+      wx.setStorageSync('menuCache', menuCache);
+      return menuCache;
+    }
   }
   try {
     menuCache = await cloudMenu();

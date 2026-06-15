@@ -13,6 +13,7 @@
     "admin/dashboard/dashboard",
     "admin/foods/foods",
     "admin/foodEdit/foodEdit",
+    "admin/optionItems/optionItems",
     "admin/categories/categories",
     "admin/orders/orders",
     "admin/members/members",

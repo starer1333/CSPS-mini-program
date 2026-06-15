@@ -49,10 +49,13 @@ function createAdminListPage(config) {
       const rows = (items || []).map(item => ({
         id: item._id || item.id,
         raw: item,
-        cells: config.fields.map(field => ({
-          label: field.label,
-          value: formatValue(item[field.key])
-        }))
+        cells: [
+          { label: '系统ID', value: item._id || item.id || '-' },
+          ...config.fields.map(field => ({
+            label: field.label,
+            value: formatValue(item[field.key])
+          }))
+        ]
       }));
       this.setData({ rows });
     },
@@ -97,6 +100,7 @@ function createAdminListPage(config) {
       }
 
       wx.showToast({ title: '已保存', icon: 'success' });
+      this.markDirty();
       this.resetForm();
       this.loadData();
     },
@@ -108,8 +112,17 @@ function createAdminListPage(config) {
         const next = items.map(item => item.id === this.data.editingId ? { ...item, ...data } : item);
         wx.setStorageSync(key, next);
       } else {
-        items.unshift({ id: Date.now().toString(), ...data });
+        items.unshift({ id: `${config.collection}_${Date.now()}`, ...data });
         wx.setStorageSync(key, items);
+      }
+    },
+
+    markDirty() {
+      if (['categories', 'foods', 'optionGroups', 'optionItems'].includes(config.collection)) {
+        wx.setStorageSync('menuDirty', true);
+      }
+      if (['banners', 'storeSettings', 'rechargePlans', 'coupons'].includes(config.collection)) {
+        wx.setStorageSync('configDirty', true);
       }
     },
 
@@ -127,6 +140,7 @@ function createAdminListPage(config) {
             const items = wx.getStorageSync(key) || [];
             wx.setStorageSync(key, items.filter(item => item.id !== id));
           }
+          this.markDirty();
           this.loadData();
         }
       });

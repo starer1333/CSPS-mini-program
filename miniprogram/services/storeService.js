@@ -32,6 +32,10 @@ function toRuntimeSettings(settings) {
 }
 
 async function getStoreSettings() {
+  const local = wx.getStorageSync('admin_storeSettings') || [];
+  if (local[0]) {
+    return toRuntimeSettings(local[0]);
+  }
   try {
     const list = await cloud.list(COLLECTIONS.storeSettings, { limit: 1 });
     return toRuntimeSettings(list[0]);
@@ -41,17 +45,16 @@ async function getStoreSettings() {
 }
 
 async function getBanners() {
+  const local = wx.getStorageSync('admin_banners') || [];
+  if (local.length) {
+    const active = normalizeBanners(local);
+    if (active.length) return active;
+  }
   try {
     const banners = await cloud.list(COLLECTIONS.banners, {
       orderBy: { field: 'sort', direction: 'asc' }
     });
-    const active = banners
-      .filter(item => item.status !== false)
-      .map(item => ({
-        id: item._id || item.id,
-        imageUrl: item.image || item.imageUrl,
-        link: item.link || ''
-      }));
+    const active = normalizeBanners(banners);
     return active.length ? active : DEFAULT_BANNERS;
   } catch (err) {
     return DEFAULT_BANNERS;
@@ -59,20 +62,15 @@ async function getBanners() {
 }
 
 async function getRechargePlans() {
+  const local = wx.getStorageSync('admin_rechargePlans') || [];
+  if (local.length) {
+    return normalizeRechargePlans(local);
+  }
   try {
     const plans = await cloud.list(COLLECTIONS.rechargePlans, {
       orderBy: { field: 'amount', direction: 'asc' }
     });
-    return plans
-      .filter(item => item.status !== false)
-      .map(item => ({
-        id: item._id || item.id,
-        amount: Number(item.amount || 0),
-        gift: Number(item.giftAmount || item.gift || 0),
-        giftAmount: Number(item.giftAmount || item.gift || 0),
-        couponId: item.couponId || '',
-        coupon: item.couponName || ''
-      }));
+    return normalizeRechargePlans(plans);
   } catch (err) {
     return [
       { amount: 300, gift: 30, coupon: '经典牛排券' },
@@ -81,6 +79,31 @@ async function getRechargePlans() {
       { amount: 2000, gift: 400, coupon: '至尊披萨券' }
     ];
   }
+}
+
+function normalizeBanners(banners) {
+  return (banners || [])
+    .filter(item => item.status !== false)
+    .sort((a, b) => Number(a.sort || 0) - Number(b.sort || 0))
+    .map(item => ({
+      id: item._id || item.id,
+      imageUrl: item.image || item.imageUrl,
+      link: item.link || ''
+    }));
+}
+
+function normalizeRechargePlans(plans) {
+  return (plans || [])
+    .filter(item => item.status !== false)
+    .sort((a, b) => Number(a.amount || 0) - Number(b.amount || 0))
+    .map(item => ({
+      id: item._id || item.id,
+      amount: Number(item.amount || 0),
+      gift: Number(item.giftAmount || item.gift || 0),
+      giftAmount: Number(item.giftAmount || item.gift || 0),
+      couponId: item.couponId || '',
+      coupon: item.couponName || ''
+    }));
 }
 
 module.exports = {

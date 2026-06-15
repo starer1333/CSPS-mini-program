@@ -1,4 +1,7 @@
 const foodService = require('../../services/foodService.js');
+const app = getApp();
+const { applyMemberPrice } = require('../../utils/member.js');
+const { moneyText } = require('../../utils/price.js');
 
 Page({
   data: {
@@ -19,13 +22,16 @@ Page({
   },
 
   onShow() {
+    if (wx.getStorageSync('menuDirty')) {
+      this.loadMenu(true);
+    }
     this.loadCart();
   },
 
-  async loadMenu() {
+  async loadMenu(force = false) {
     wx.showLoading({ title: '加载菜单' });
     try {
-      const menu = await foodService.getMenuData();
+      const menu = await foodService.getMenuData(force);
       this.setData({
         mainCategories: menu.mainCategories,
         subCategories: menu.subCategories,
@@ -92,14 +98,69 @@ Page({
   },
 
   addToCart(e) {
-    e.stopPropagation();
     const dishId = e.currentTarget.dataset.id;
     const dish = this.data.currentDishes.find(d => d.id === dishId);
-    if (dish) {
-      wx.navigateTo({
-        url: `/pages/dishDetail/dishDetail?id=${dishId}`
-      });
+    if (!dish) return;
+
+    const cartItem = this.buildDefaultCartItem(dish);
+    const key = this.buildCartKey(dish, cartItem.selectedOptions);
+    const cart = wx.getStorageSync('cart') || {};
+    if (cart[key]) {
+      cart[key].quantity += 1;
+      cart[key].totalPrice = moneyText(cart[key].unitPrice * cart[key].quantity);
+    } else {
+      cart[key] = cartItem;
     }
+    wx.setStorageSync('cart', cart);
+    this.loadCart();
+    wx.showToast({ title: '已加入购物车', icon: 'success' });
+  },
+
+  buildDefaultCartItem(dish) {
+    const selectedOptions = [];
+    const specs = dish.specs || {};
+    const singleGroups = [
+      { key: 'sizes', label: '尺寸' },
+      { key: 'crusts', label: '饼底/卷边' },
+      { key: 'sauces', label: '酱料/口味' }
+    ];
+
+    singleGroups.forEach(group => {
+      const item = specs[group.key] && specs[group.key][0];
+      if (item) {
+        selectedOptions.push({
+          group: item.group || group.label,
+          item: item.name,
+          price: Number(item.price || 0)
+        });
+      }
+    });
+
+    const extraPrice = selectedOptions.reduce((sum, item) => sum + Number(item.price || 0), 0);
+    const basePrice = applyMemberPrice(dish, app.globalData.isMember);
+    const unitPrice = Number(basePrice || 0) + extraPrice;
+    const specsDesc = selectedOptions.map(item => item.item).join(' ');
+
+    return {
+      dishId: dish.id,
+      foodId: dish.id,
+      dishName: dish.name,
+      foodName: dish.name,
+      imageUrl: dish.imageUrl,
+      image: dish.imageUrl,
+      basePrice: dish.basePrice,
+      specsDesc,
+      selectedOptions,
+      quantity: 1,
+      unitPrice,
+      finalPrice: unitPrice,
+      totalPrice: moneyText(unitPrice)
+    };
+  },
+
+  buildCartKey(dish, selectedOptions) {
+    const optionKey = selectedOptions.map(item => `${item.group}:${item.item}`).join('|');
+    return `${dish.id}-${optionKey || 'default'}`;
   },
 
   goToDetail(e) {

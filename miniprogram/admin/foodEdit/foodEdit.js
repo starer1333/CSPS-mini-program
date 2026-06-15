@@ -1,7 +1,7 @@
 const createAdminListPage = require('../_shared/crudPage.js');
 
 createAdminListPage({
-  title: '规格管理',
+  title: '规格组管理',
   collection: 'optionGroups',
   orderBy: { field: 'sort', direction: 'asc' },
   fields: [

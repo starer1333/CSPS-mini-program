@@ -46,7 +46,7 @@
               </view>
             </view>
           </view>
-          <button class="add-btn" bindtap="addToCart" data-id="{{item.id}}" data-stopPropagation>+</button>
+          <button class="add-btn" catchtap="addToCart" data-id="{{item.id}}">+</button>
         </view>
       </scroll-view>
     </view>
