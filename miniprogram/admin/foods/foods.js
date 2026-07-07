@@ -3,6 +3,8 @@ const createAdminListPage = require('../_shared/crudPage.js');
 createAdminListPage({
   title: '菜品管理',
   collection: 'foods',
+  relatedPath: '/admin/foodEdit/foodEdit',
+  relatedLabel: '管理尺寸、酱料和配料',
   orderBy: { field: 'sort', direction: 'asc' },
   fields: [
     { key: 'name', label: '菜品名称' },

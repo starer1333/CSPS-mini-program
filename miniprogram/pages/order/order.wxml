@@ -46,7 +46,9 @@
               </view>
             </view>
           </view>
-          <button class="add-btn" catchtap="addToCart" data-id="{{item.id}}">+</button>
+          <view class="add-btn" hover-class="add-btn-pressed" catchtap="addToCart" data-id="{{item.id}}" aria-label="加入购物车">
+            <text class="add-icon">+</text>
+          </view>
         </view>
       </scroll-view>
     </view>

@@ -3,6 +3,7 @@
     <text class="admin-title">{{title}}</text>
     <text class="cloud-state">{{cloudReady ? '云数据库' : '本地预览'}}</text>
   </view>
+  <button wx:if="{{relatedPath}}" class="related-btn" bindtap="goRelated">{{relatedLabel}}</button>
 
   <view class="form-panel">
     <view wx:for="{{formFields}}" wx:key="key" class="field">

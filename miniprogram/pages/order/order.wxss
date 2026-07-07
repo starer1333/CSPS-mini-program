@@ -98,9 +98,9 @@
 
 .dish-card {
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 8rpx;
   margin-bottom: 24rpx;
-  padding: 30rpx;
+  padding: 24rpx;
   display: flex;
   position: relative;
   box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.03);
@@ -116,6 +116,8 @@
 
 .dish-info {
   flex: 1;
+  min-width: 0;
+  padding-bottom: 54rpx;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -206,30 +208,37 @@
 
 /* 红色圆形加号按钮 */
 .add-btn {
-  position: absolute !important;
-  right: 25rpx !important;
-  bottom: 22rpx !important;
-  width: 48rpx !important;
-  height: 48rpx !important;
-  line-height: 48rpx !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background-color: #ff3b30 !important;   
-  color: #ffffff !important;
-  border-radius: 50% !important;
-  font-size: 34rpx !important;
-  font-weight: bold !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-  z-index: 10 !important;
-  min-width: 48rpx !important;
+  position: absolute;
+  right: 22rpx;
+  bottom: 22rpx;
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: #e92920;
+  color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 4rpx 10rpx rgba(233, 41, 32, 0.24);
+  z-index: 10;
 }
 
-.add-btn::after {
-  border: none !important;
+.add-btn-pressed {
+  opacity: 0.75;
+  transform: scale(0.94);
+}
+
+.add-icon {
+  display: block;
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 52rpx;
+  text-align: center;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 42rpx;
+  font-weight: 400;
 }
 
 /* 底部购物车栏 */

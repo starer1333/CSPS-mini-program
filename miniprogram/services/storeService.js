@@ -1,4 +1,5 @@
 const cloud = require('./cloudService.js');
+const localData = require('./localDataService.js');
 const { COLLECTIONS } = require('../config/database.js');
 
 const DEFAULT_SETTINGS = {
@@ -32,52 +33,64 @@ function toRuntimeSettings(settings) {
 }
 
 async function getStoreSettings() {
-  const local = wx.getStorageSync('admin_storeSettings') || [];
-  if (local[0]) {
-    return toRuntimeSettings(local[0]);
+  localData.ensureCollection(COLLECTIONS.storeSettings);
+  if (localData.hasPending(COLLECTIONS.storeSettings)) {
+    return toRuntimeSettings(localData.getCollection(COLLECTIONS.storeSettings)[0]);
   }
   try {
     const list = await cloud.list(COLLECTIONS.storeSettings, { limit: 1 });
-    return toRuntimeSettings(list[0]);
+    if (list[0]) {
+      localData.replaceCollection(COLLECTIONS.storeSettings, list);
+      return toRuntimeSettings(list[0]);
+    }
+    localData.setLocalMode(COLLECTIONS.storeSettings, true);
+    return toRuntimeSettings(localData.getCollection(COLLECTIONS.storeSettings)[0]);
   } catch (err) {
-    return toRuntimeSettings(DEFAULT_SETTINGS);
+    localData.setLocalMode(COLLECTIONS.storeSettings, true);
+    return toRuntimeSettings(localData.getCollection(COLLECTIONS.storeSettings)[0] || DEFAULT_SETTINGS);
   }
 }
 
 async function getBanners() {
-  const local = wx.getStorageSync('admin_banners') || [];
-  if (local.length) {
-    const active = normalizeBanners(local);
-    if (active.length) return active;
+  localData.ensureCollection(COLLECTIONS.banners);
+  if (localData.hasPending(COLLECTIONS.banners)) {
+    return normalizeBanners(localData.getCollection(COLLECTIONS.banners));
   }
   try {
     const banners = await cloud.list(COLLECTIONS.banners, {
       orderBy: { field: 'sort', direction: 'asc' }
     });
     const active = normalizeBanners(banners);
-    return active.length ? active : DEFAULT_BANNERS;
+    if (active.length) {
+      localData.replaceCollection(COLLECTIONS.banners, banners);
+      return active;
+    }
+    localData.setLocalMode(COLLECTIONS.banners, true);
+    return normalizeBanners(localData.getCollection(COLLECTIONS.banners));
   } catch (err) {
-    return DEFAULT_BANNERS;
+    localData.setLocalMode(COLLECTIONS.banners, true);
+    return normalizeBanners(localData.getCollection(COLLECTIONS.banners)) || DEFAULT_BANNERS;
   }
 }
 
 async function getRechargePlans() {
-  const local = wx.getStorageSync('admin_rechargePlans') || [];
-  if (local.length) {
-    return normalizeRechargePlans(local);
+  localData.ensureCollection(COLLECTIONS.rechargePlans);
+  if (localData.hasPending(COLLECTIONS.rechargePlans)) {
+    return normalizeRechargePlans(localData.getCollection(COLLECTIONS.rechargePlans));
   }
   try {
     const plans = await cloud.list(COLLECTIONS.rechargePlans, {
       orderBy: { field: 'amount', direction: 'asc' }
     });
-    return normalizeRechargePlans(plans);
+    if (plans.length) {
+      localData.replaceCollection(COLLECTIONS.rechargePlans, plans);
+      return normalizeRechargePlans(plans);
+    }
+    localData.setLocalMode(COLLECTIONS.rechargePlans, true);
+    return normalizeRechargePlans(localData.getCollection(COLLECTIONS.rechargePlans));
   } catch (err) {
-    return [
-      { amount: 300, gift: 30, coupon: '经典牛排券' },
-      { amount: 500, gift: 60, coupon: '' },
-      { amount: 1000, gift: 150, coupon: '小吃券' },
-      { amount: 2000, gift: 400, coupon: '至尊披萨券' }
-    ];
+    localData.setLocalMode(COLLECTIONS.rechargePlans, true);
+    return normalizeRechargePlans(localData.getCollection(COLLECTIONS.rechargePlans));
   }
 }
 

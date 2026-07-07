@@ -1,1 +1,79 @@
-<include src="../_shared/crud.wxml" />
+<view class="admin-page">
+  <view class="admin-header">
+    <text class="admin-title">规格管理</text>
+    <text class="cloud-state">{{cloudReady ? '云数据库' : '本地预览'}}</text>
+  </view>
+
+  <view class="form-panel">
+    <text class="section-title">选择菜品</text>
+    <picker mode="selector" range="{{foodNames}}" value="{{selectedFoodIndex}}" bindchange="onFoodChange">
+      <view class="picker-field">{{currentFood ? currentFood.name : '请选择菜品'}}</view>
+    </picker>
+    <text wx:if="{{currentFood}}" class="food-description">{{currentFood.description}}</text>
+  </view>
+
+  <view class="form-panel" wx:if="{{currentFood}}">
+    <text class="section-title">{{editingGroupId ? '编辑规格组' : '新增规格组'}}</text>
+    <view class="field">
+      <text class="field-label">名称</text>
+      <input class="field-input" placeholder="尺寸、酱料、卷边、配料" value="{{groupName}}" bindinput="onGroupNameInput" />
+    </view>
+    <view class="field">
+      <text class="field-label">选择方式</text>
+      <picker mode="selector" range="{{groupTypeLabels}}" value="{{groupTypeIndex}}" bindchange="onGroupTypeChange">
+        <view class="picker-field">{{groupTypeLabels[groupTypeIndex]}}</view>
+      </picker>
+    </view>
+    <view class="switch-row">
+      <text>是否必选</text>
+      <switch checked="{{groupRequired}}" color="#ff3b30" bindchange="onGroupRequiredChange" />
+    </view>
+    <view class="actions">
+      <button class="primary-btn" bindtap="saveGroup">{{editingGroupId ? '保存规格组' : '新增规格组'}}</button>
+      <button wx:if="{{editingGroupId}}" class="plain-btn" bindtap="resetGroupForm">取消</button>
+    </view>
+  </view>
+
+  <view class="list-panel" wx:if="{{currentFood}}">
+    <text class="section-title">已有规格组</text>
+    <view wx:for="{{groups}}" wx:key="id" class="spec-group-card {{activeGroupId === item.id ? 'active' : ''}}">
+      <view class="spec-group-main" data-id="{{item.id}}" bindtap="selectGroup">
+        <view>
+          <text class="spec-group-name">{{item.name}}</text>
+          <text class="spec-group-meta">{{item.typeLabel}} · {{item.required ? '必选' : '可选'}} · {{item.items.length}} 项</text>
+        </view>
+        <text class="select-label">{{activeGroupId === item.id ? '已选择' : '选择'}}</text>
+      </view>
+      <view class="row-actions">
+        <button class="plain-btn" data-id="{{item.id}}" catchtap="editGroup">编辑</button>
+        <button class="danger-btn" data-id="{{item.id}}" catchtap="deleteGroup">删除</button>
+      </view>
+      <view wx:if="{{activeGroupId === item.id}}" class="option-list">
+        <view wx:for="{{item.items}}" wx:for-item="option" wx:key="id" class="option-row">
+          <view>
+            <text class="option-name">{{option.name}}</text>
+            <text class="option-price">{{option.price > 0 ? '+' : ''}}¥{{option.price}}</text>
+          </view>
+          <view class="mini-actions">
+            <text data-id="{{option.id}}" catchtap="editItem">编辑</text>
+            <text class="delete-text" data-id="{{option.id}}" catchtap="deleteItem">删除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{groups.length === 0}}" class="empty">该菜品还没有规格</view>
+  </view>
+
+  <view class="form-panel" wx:if="{{activeGroupId}}">
+    <text class="section-title">{{editingItemId ? '编辑' : '新增'}}“{{activeGroupName}}”规格项</text>
+    <view class="field">
+      <text class="field-label">规格项名称</text>
+      <input class="field-input" placeholder="例如 12寸、番茄酱、加芝士" value="{{itemName}}" bindinput="onItemNameInput" />
+    </view>
+    <view class="field">
+      <text class="field-label">加价金额</text>
+      <input class="field-input" type="digit" placeholder="0" value="{{itemPrice}}" bindinput="onItemPriceInput" />
+    </view>
+    <button class="primary-btn" bindtap="saveItem">{{editingItemId ? '保存规格项' : '新增规格项'}}</button>
+  </view>
+</view>

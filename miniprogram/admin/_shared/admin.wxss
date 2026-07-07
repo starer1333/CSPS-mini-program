@@ -55,6 +55,32 @@
 
 .field-textarea {
   width: 100%;
+  min-height: 180rpx;
+  padding: 18rpx;
+  box-sizing: border-box;
+  background: #f8fafc;
+  border: 1rpx solid #d8dee8;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.related-btn {
+  margin: 0 0 20rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 6rpx;
+  background: #1f2933;
+  color: #fff;
+  font-size: 26rpx;
+}
+
+.related-btn::after {
+  border: 0;
+}
+
+.field-textarea {
+  width: 100%;
   min-height: 150rpx;
   padding: 18rpx;
   box-sizing: border-box;

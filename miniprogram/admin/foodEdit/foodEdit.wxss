@@ -1,1 +1,111 @@
 @import "../_shared/admin.wxss";
+
+.section-title {
+  display: block;
+  margin-bottom: 18rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.picker-field {
+  height: 72rpx;
+  line-height: 72rpx;
+  padding: 0 18rpx;
+  border: 1rpx solid #d8dee8;
+  border-radius: 6rpx;
+  background: #f8fafc;
+  color: #1f2933;
+  font-size: 26rpx;
+}
+
+.food-description {
+  display: block;
+  margin-top: 14rpx;
+  color: #697586;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12rpx 0 22rpx;
+  color: #334155;
+  font-size: 26rpx;
+}
+
+.spec-group-card {
+  margin-bottom: 16rpx;
+  padding: 18rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 8rpx;
+}
+
+.spec-group-card.active {
+  border-color: #ff3b30;
+}
+
+.spec-group-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spec-group-name,
+.spec-group-meta {
+  display: block;
+}
+
+.spec-group-name {
+  color: #1f2933;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.spec-group-meta {
+  margin-top: 6rpx;
+  color: #697586;
+  font-size: 22rpx;
+}
+
+.select-label {
+  color: #ff3b30;
+  font-size: 24rpx;
+}
+
+.option-list {
+  margin-top: 16rpx;
+  border-top: 1rpx solid #edf2f7;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72rpx;
+  border-bottom: 1rpx solid #edf2f7;
+}
+
+.option-name {
+  margin-right: 16rpx;
+  color: #1f2933;
+  font-size: 25rpx;
+}
+
+.option-price {
+  color: #ff3b30;
+  font-size: 23rpx;
+}
+
+.mini-actions {
+  display: flex;
+  gap: 24rpx;
+  color: #475569;
+  font-size: 24rpx;
+}
+
+.delete-text {
+  color: #b91c1c;
+}

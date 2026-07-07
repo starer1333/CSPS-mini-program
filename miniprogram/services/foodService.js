@@ -1,5 +1,6 @@
 const dishData = require('../data/dishes.js');
 const cloud = require('./cloudService.js');
+const localData = require('./localDataService.js');
 const { COLLECTIONS } = require('../config/database.js');
 
 const MAIN_CATEGORIES = [
@@ -107,14 +108,15 @@ function fallbackMenu() {
 }
 
 function localAdminMenu() {
-  const foods = wx.getStorageSync('admin_foods') || [];
+  localData.ensureCollection('foods');
+  const foods = localData.getCollection('foods');
   if (!foods.length) {
     return null;
   }
 
-  const categories = wx.getStorageSync('admin_categories') || [];
-  const optionGroups = wx.getStorageSync('admin_optionGroups') || [];
-  const optionItems = wx.getStorageSync('admin_optionItems') || [];
+  const categories = localData.getCollection('categories');
+  const optionGroups = localData.getCollection('optionGroups');
+  const optionItems = localData.getCollection('optionItems');
 
   const categoryById = {};
   categories.forEach(category => {
@@ -188,6 +190,9 @@ async function cloudMenu() {
     cloud.list(COLLECTIONS.optionGroups),
     cloud.list(COLLECTIONS.optionItems)
   ]);
+  if (!foods.length) {
+    throw new Error('cloud foods collection is empty');
+  }
 
   const activeCategories = categories.filter(item => item.status !== false).sort(sortBySortField);
   const categoryById = {};
@@ -248,27 +253,26 @@ async function getMenuData(force = false) {
   if (menuCache && !force) {
     return menuCache;
   }
-  if (force || wx.getStorageSync('menuDirty')) {
-    const localMenu = localAdminMenu();
-    if (localMenu) {
-      menuCache = localMenu;
-      wx.setStorageSync('menuDirty', false);
-      wx.setStorageSync('menuCache', menuCache);
-      return menuCache;
+  const menuCollections = ['categories', 'foods', 'optionGroups', 'optionItems'];
+  const useLocal = menuCollections.some(collection => localData.hasPending(collection));
+  if (!useLocal) {
+    try {
+      menuCache = await cloudMenu();
+    } catch (err) {
+      console.warn('云端菜品加载失败，使用可编辑本地菜单', err);
+      localData.setLocalMode('foods', true);
+      menuCache = fallbackMenu();
     }
-  }
-  try {
-    menuCache = await cloudMenu();
-  } catch (err) {
-    console.warn('云端菜品加载失败，使用本地菜品数据', err);
+  } else {
     menuCache = fallbackMenu();
   }
+  wx.setStorageSync('menuDirty', false);
   wx.setStorageSync('menuCache', menuCache);
   return menuCache;
 }
 
 async function findFoodById(id) {
-  const menu = await getMenuData();
+  const menu = await getMenuData(!!wx.getStorageSync('menuDirty'));
   const buckets = menu.allDishes || {};
   let found = null;
   Object.keys(buckets).some(key => {

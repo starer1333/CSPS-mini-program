@@ -1,4 +1,4 @@
-const cloud = require('../../services/cloudService.js');
+const adminData = require('../../services/adminDataService.js');
 
 function createAdminListPage(config) {
   Page({
@@ -10,7 +10,9 @@ function createAdminListPage(config) {
       formFields: [],
       editingId: '',
       loading: true,
-      cloudReady: false
+      cloudReady: false,
+      relatedPath: config.relatedPath || '',
+      relatedLabel: config.relatedLabel || ''
     },
 
     onLoad() {
@@ -31,15 +33,11 @@ function createAdminListPage(config) {
     async loadData() {
       this.setData({ loading: true });
       try {
-        const items = await cloud.list(config.collection, config.orderBy ? {
+        const result = await adminData.list(config.collection, config.orderBy ? {
           orderBy: config.orderBy
         } : {});
-        this.setRows(items);
-        this.setData({ cloudReady: true });
-      } catch (err) {
-        const items = wx.getStorageSync(`admin_${config.collection}`) || [];
-        this.setRows(items);
-        this.setData({ cloudReady: false });
+        this.setRows(result.items);
+        this.setData({ cloudReady: result.cloudReady });
       } finally {
         this.setData({ loading: false });
       }
@@ -89,41 +87,11 @@ function createAdminListPage(config) {
         data.createTime = new Date().toISOString();
       }
 
-      try {
-        if (this.data.editingId) {
-          await cloud.update(config.collection, this.data.editingId, data);
-        } else {
-          await cloud.add(config.collection, data);
-        }
-      } catch (err) {
-        this.saveLocal(data);
-      }
+      await adminData.save(config.collection, this.data.editingId, data);
 
       wx.showToast({ title: '已保存', icon: 'success' });
-      this.markDirty();
       this.resetForm();
       this.loadData();
-    },
-
-    saveLocal(data) {
-      const key = `admin_${config.collection}`;
-      const items = wx.getStorageSync(key) || [];
-      if (this.data.editingId) {
-        const next = items.map(item => item.id === this.data.editingId ? { ...item, ...data } : item);
-        wx.setStorageSync(key, next);
-      } else {
-        items.unshift({ id: `${config.collection}_${Date.now()}`, ...data });
-        wx.setStorageSync(key, items);
-      }
-    },
-
-    markDirty() {
-      if (['categories', 'foods', 'optionGroups', 'optionItems'].includes(config.collection)) {
-        wx.setStorageSync('menuDirty', true);
-      }
-      if (['banners', 'storeSettings', 'rechargePlans', 'coupons'].includes(config.collection)) {
-        wx.setStorageSync('configDirty', true);
-      }
     },
 
     async removeItem(e) {
@@ -133,14 +101,7 @@ function createAdminListPage(config) {
         content: '删除后前台将不再展示该数据',
         success: async res => {
           if (!res.confirm) return;
-          try {
-            await cloud.remove(config.collection, id);
-          } catch (err) {
-            const key = `admin_${config.collection}`;
-            const items = wx.getStorageSync(key) || [];
-            wx.setStorageSync(key, items.filter(item => item.id !== id));
-          }
-          this.markDirty();
+          await adminData.remove(config.collection, id);
           this.loadData();
         }
       });
@@ -148,6 +109,12 @@ function createAdminListPage(config) {
 
     cancelEdit() {
       this.resetForm();
+    },
+
+    goRelated() {
+      if (config.relatedPath) {
+        wx.navigateTo({ url: config.relatedPath });
+      }
     }
   });
 }

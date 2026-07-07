@@ -15,8 +15,16 @@ Page({
   },
 
   async onLoad() {
+    await this.loadPlans();
+  },
+
+  async onShow() {
+    await this.loadPlans();
+  },
+
+  async loadPlans() {
     const rules = await storeService.getRechargePlans();
-    this.setData({ rules });
+    this.setData({ rules, selectedRuleIndex: null });
   },
 
   selectRule(e) {

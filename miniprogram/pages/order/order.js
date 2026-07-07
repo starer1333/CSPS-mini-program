@@ -17,14 +17,11 @@ Page({
   },
 
   onLoad() {
-    this.loadMenu();
     this.loadCart();
   },
 
   onShow() {
-    if (wx.getStorageSync('menuDirty')) {
-      this.loadMenu(true);
-    }
+    this.loadMenu(true);
     this.loadCart();
   },
 
@@ -113,6 +110,9 @@ Page({
     }
     wx.setStorageSync('cart', cart);
     this.loadCart();
+    if (wx.vibrateShort) {
+      wx.vibrateShort({ type: 'light' });
+    }
     wx.showToast({ title: '已加入购物车', icon: 'success' });
   },
 

@@ -6,8 +6,9 @@ Page({
     banners: [],
     storeSettings: {}
   },
-  onLoad() {
+  onShow() {
     this.loadHomeData();
+    wx.setStorageSync('configDirty', false);
   },
   async loadHomeData() {
     const [banners, storeSettings] = await Promise.all([
